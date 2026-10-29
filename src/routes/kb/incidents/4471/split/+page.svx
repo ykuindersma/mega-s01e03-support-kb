@@ -20,9 +20,18 @@ signature: Yorick Kuindersma (ykuindersma) with Claude Code
 [#4471](/kb/incidents/4471) says one issue, one fix queued. The reports in it say three. Each now has
 a ticket of its own, with the reports it covers.
 
+## Where each one stands
+
+Engineering closed #4471 on 5 October.
+
+- **`parser`**: fixed (`fix(dates): parse dd/mm for eu locales`). Ticket closed.
+- **`hint`**: won't fix. The `booking-v3` form is retired, so no new reports can come through it.
+  Ticket closed as not planned.
+- **`shift`**: still open. Neither change touches it.
+
 <Callout kind="warn">
-The queued parser fix closes the <code>parser</code> ticket only. The <code>hint</code> and
-<code>shift</code> reports keep coming after it ships.
+Closing #4471 did not close every problem in it. Expect more <code>shift</code> reports, and file
+them on its own ticket, not on #4471.
 </Callout>
 
 ## What the reports show
@@ -57,7 +66,7 @@ For comparison, the table on the incident page, built from the same data:
 
 ## Next
 
-- Keep #4471 for `parser` only and link the other two tickets from it.
+- Find the time zone bug behind `shift` and fix it.
 - Replace decision 0001 with a new record: merge on cause (tenant, form, channel), not subject.
 
 <RenderStamp {signature} />
