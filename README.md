@@ -34,3 +34,9 @@ Support desk. Decision records: whoever signed them.
 ---
 
 Exported 2026-10-04 from the `support` repo, `apps/kb/` → `src/`.
+
+## Build
+
+`pnpm install && pnpm build` renders every page to `build/` (static HTML). `build/` is committed, so
+the pages can be read as the desk sees them without building. The page about #4471's three problems is
+`src/routes/kb/incidents/4471/split/+page.svx`, rendered at `build/kb/incidents/4471/split/index.html`.
