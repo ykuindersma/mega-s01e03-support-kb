@@ -1,5 +1,6 @@
-// The problems inside a merged ticket. causes.ts places a report by tenant and channel; a report the
-// desk read as a one-day move (desk-notes.json) is not a month flip at all, so it is its own problem.
+// The problems inside a merged ticket, counted the desk's way: causes.ts places every report by tenant
+// and channel, and a report the desk read as a one-day move (desk-notes.json) stays counted where it is
+// filed. The one-day moves are their own problem too, so they get their own group on top.
 import { causeOf, uniqueById, type Report, type Tenant } from '#lib/kb/causes';
 
 export type Problem = 'parser' | 'hint' | 'shift';
@@ -10,10 +11,6 @@ export const PROBLEMS: Record<Problem, string> = {
   shift: 'Invite lands one day off (time zone), not a month flip',
 };
 
-export function problemOf(r: Report, t: Tenant | undefined, shifted: ReadonlySet<string>): Problem | 'unplaced' {
-  if (shifted.has(r.id)) return 'shift';
-  return causeOf(r, t) ?? 'unplaced';
-}
 
 export type ProblemGroup = {
   problem: Problem | 'unplaced';
@@ -34,12 +31,13 @@ export function splitTicket(
   shifted: readonly string[],
 ): { exportedRows: number; reports: number; groups: ProblemGroup[] } {
   const merged = uniqueById(exported).filter((r) => r.mergedInto === ticket);
-  const moved = new Set(shifted);
   const by = new Map<ProblemGroup['problem'], Report[]>();
   for (const r of merged) {
-    const p = problemOf(r, tenantOf(r), moved);
+    const p = causeOf(r, tenantOf(r)) ?? 'unplaced';
     by.set(p, [...(by.get(p) ?? []), r]);
   }
+  const moved = merged.filter((r) => shifted.includes(r.id));
+  if (moved.length) by.set('shift', moved);
   const groups = [...by.entries()]
     .map(([problem, rs]) => {
       const days = rs.map((r) => r.receivedAt.slice(0, 10)).sort();

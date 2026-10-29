@@ -36,7 +36,8 @@ The queued parser fix closes the <code>parser</code> ticket only. The <code>hint
   the tenant's way. Same symptom, different code: the fix is the form's hint, not the parser.
 - **`shift`**: the date moves by one day, not by a month (Tuesday 12 May becomes Monday 11 May; a
   client in Lisbon gets Tuesday, one in Toronto gets Monday). A time zone bug. The desk read these
-  as one-day moves (`desk-notes.json`), and #4471 still counts them under `parser` by tenant.
+  as one-day moves (`desk-notes.json`). As the desk counts, they stay in the `parser` count where
+  they are filed by tenant, and the `shift` row lists them again.
 
 ## Why it looked like one
 
