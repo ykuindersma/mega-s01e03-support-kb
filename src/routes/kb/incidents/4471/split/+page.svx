@@ -1,0 +1,62 @@
+---
+layout: runbook
+title: '#4471 · three problems in one ticket'
+owner: ykuindersma
+status: open
+reviewed: 2026-10-29
+signature: Yorick Kuindersma (ykuindersma) with Claude Code
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import CauseTable from '#lib/kb/CauseTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const repo = 'https://github.com/ykuindersma/mega-s01e03-support-kb';
+  const issues = { parser: `${repo}/issues/1`, hint: `${repo}/issues/2`, shift: `${repo}/issues/3` };
+</script>
+
+[#4471](/kb/incidents/4471) says one issue, one fix queued. The reports in it say three. Each now has
+a ticket of its own, with the reports it covers.
+
+<Callout kind="warn">
+The queued parser fix closes the <code>parser</code> ticket only. The <code>hint</code> and
+<code>shift</code> reports keep coming after it ships.
+</Callout>
+
+## What the reports show
+
+<ProblemTable ticket={4471} {issues} />
+
+- **`parser`**: the tenant writes the day first and the shared parser reads the month first.
+  The booked date and the invite date are the same two numbers, flipped (7 April becomes 4 July).
+- **`hint`**: a report that came in through the `booking-v3` form at a day-first tenant. That form
+  prints `MM/DD/YYYY` under its date field, so people type the month first and the form reads it
+  the tenant's way. Same symptom, different code: the fix is the form's hint, not the parser.
+- **`shift`**: the date moves by one day, not by a month (Tuesday 12 May becomes Monday 11 May; a
+  client in Lisbon gets Tuesday, one in Toronto gets Monday). A time zone bug. The desk read these
+  as one-day moves (`desk-notes.json`), and #4471 still counts them under `parser` by tenant.
+
+## Why it looked like one
+
+- Dedupe matches on subject line ([decision 0001](/kb/decisions/0001-dedupe-by-subject)).
+  "Wrong day on the invite" reads the same for all three problems, so all three were merged.
+- The intake tag is a guess from the reporter's browser. A US browser got tagged `hint` whatever
+  form it used; a local browser on the `booking-v3` form got tagged `parser`. Compare the
+  "intake tagged" column above: the tag does not tell the problems apart. Tenant, form and
+  channel do (`causes.ts`).
+- Each export row counts once by id. The export pages overlap, so some reports appear twice.
+
+## #4471 as it stands
+
+For comparison, the table on the incident page, built from the same data:
+
+<CauseTable ticket={4471} />
+
+## Next
+
+- Keep #4471 for `parser` only and link the other two tickets from it.
+- Replace decision 0001 with a new record: merge on cause (tenant, form, channel), not subject.
+
+<RenderStamp {signature} />
