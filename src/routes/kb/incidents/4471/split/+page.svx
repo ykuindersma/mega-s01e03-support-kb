@@ -4,7 +4,7 @@ title: '#4471 · three problems in one ticket'
 owner: ykuindersma
 status: open
 reviewed: 2026-10-29
-signature: Yorick Kuindersma (ykuindersma) with Claude Code
+signature: v1.eyJzdWIiOiIxODkwIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTMzMDYzNzYsImV4cCI6MTc5MzM5Mjc3Nn0.d1btrGhG7Eb81vsnHvI03vwEMY8q8DjXdRz6zhhxCzQ
 ---
 
 <script>
